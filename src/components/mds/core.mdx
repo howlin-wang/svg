@@ -1,0 +1,11 @@
+**We introduce SVG (Self-supervised Visual Generation), a new paradigm for latent diffusion models that completely eliminates the traditional Variational Autoencoder (VAE).**
+
+Our **core idea** is simple yet powerful:
+
+> Instead of learning a latent space for generation from scratch, we leverage one that is already exceptionally good. Specifically, **SVG utilizes the highly structured and semantically disentangled feature space from the powerful self-supervised vision model, DINOv3, as its foundation**. To ensure the fidelity of image reconstruction, we introduce a **lightweight Residual Encoder** designed to capture the fine-grained, high-frequency details that DINO features might overlook.
+
+This *"leverage, don't learn"* strategy leads to **transformative advantages**:
+
+1. **Extreme Efficiency**: Compared to mainstream VAE-based models, SVG achieves up to **62x speedup in training** and a **35x speedup in inference**.
+2. **Superior Quality**: Generates **high-fidelity and high-quality images** in remarkably few sampling steps (e.g., 25 steps).
+3. **True Versatility**: Establishes a **unified visual feature space**. The same encoder used for image generation can, without any modification, achieve **state-of-the-art performance** on downstream tasks like image classification and semantic segmentation, realizing a *"one model, multiple purposes"* vision.

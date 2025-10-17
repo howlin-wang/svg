@@ -1,17 +1,17 @@
 <script setup>
-import abstract from '../mds/core.mdx';
+import experiments from '../mds/exp.mdx';
 </script>
 
 <template>
   <div class="section-container">
     <el-divider class="section-divider">
-      <span class="section-title">Overview</span>
+      <span class="section-title">Experiments</span>
     </el-divider>
 
     <el-row justify="center">
       <el-col :xs="24" :sm="24" :md="24" :lg="22" :xl="20" class="content-col">
         <div class="content-wrapper">
-          <abstract />
+          <experiments />
         </div>
       </el-col>
     </el-row>
