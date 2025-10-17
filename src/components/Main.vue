@@ -5,7 +5,7 @@ import Motivation from './sections/Motivation.vue'
 import BibTeX from './sections/BibTeX.vue'
 import Method from './sections/Method.vue'
 import Experiments from './sections/Experiments.vue'
-import Comment from './sections/Comment.vue'
+// import Comment from './sections/Comment.vue'
 
 export default {
   components: {
@@ -19,186 +19,231 @@ export default {
   },
   data() {
     return {
-      initialSidebarTop: 0,
-      abstractTop: 0 // 新增：存储Abstract区块顶部位置
+      abstractTop: 0,
+      headerHeight: 0
     }
   },
   mounted() {
-    // 监听滚动事件实现目录固定效果
-    window.addEventListener('scroll', this.handleScroll)
-    // 初始化位置
+    // Wait for the DOM to be fully rendered to get accurate positions
     this.$nextTick(() => {
       this.initializePositions()
-      this.handleScroll()
+      window.addEventListener('scroll', this.handleScroll)
+      window.addEventListener('resize', this.handleResize)
     })
   },
   beforeUnmount() {
-    // 移除事件监听
+    // Clean up the event listeners
     window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
     initializePositions() {
-      const sidebar = document.querySelector('.sidebar-container')
-      const abstract = document.querySelector('#abstract')
+      const abstractEl = document.querySelector('#abstract')
+      const headerEl = document.querySelector('header') // Assuming you have a <header> element
       
-      if (sidebar) {
-        this.initialSidebarTop = sidebar.offsetTop
+      if (abstractEl) {
+        // Record the top position of the main content area
+        this.abstractTop = abstractEl.offsetTop
       }
-      if (abstract) {
-        // 记录Abstract区块的顶部位置作为目录上限
-        this.abstractTop = abstract.offsetTop
+      if (headerEl) {
+        this.headerHeight = headerEl.offsetHeight
       }
     },
     handleScroll() {
       const sidebar = document.querySelector('.sidebar-container')
       if (!sidebar) return
 
-      const headerHeight = document.querySelector('header')?.offsetHeight || 0
-      const scrollTop = window.scrollY
-      const windowHeight = window.innerHeight
-      const sidebarHeight = sidebar.offsetHeight
-
-      // 计算固定定位的临界值（基于Abstract顶部）
-      const shouldFix = scrollTop >= this.abstractTop - headerHeight
-
-      if (shouldFix) {
-        // 确保目录不会超出视口底部，同时顶部不超过Abstract区域
-        const maxTop = windowHeight - sidebarHeight - 20
-        // 顶部位置不超过Abstract区块顶部
-        const topValue = Math.min(
-          headerHeight + 50, 
-          maxTop,
-          // 关键：限制目录最高位置不超过Abstract顶部
-          window.scrollY + (this.abstractTop - scrollTop)
-        )
-        
-        sidebar.classList.add('fixed')
-        sidebar.style.top = `${topValue}px`
-        // 不设置width，让CSS控制固定宽度
-      } else {
+      // 在移动端(屏幕宽度 <= 768px)不执行固定侧边栏逻辑
+      if (window.innerWidth <= 768) {
         sidebar.classList.remove('fixed')
         sidebar.style.top = ''
+        return
       }
+
+      const scrollTop = window.scrollY
+
+      // The point where the sidebar should become fixed.
+      // It's the top of the abstract section minus the header's height and a small margin.
+      const fixThreshold = this.abstractTop - this.headerHeight - 50 // 50px margin from top
+
+      if (scrollTop >= fixThreshold) {
+        sidebar.classList.add('fixed')
+        // Set a fixed top position relative to the viewport
+        sidebar.style.top = `${this.headerHeight + 50}px`
+      } else {
+        sidebar.classList.remove('fixed')
+        // Reset the top style to allow it to scroll naturally with the page
+        sidebar.style.top = ''
+      }
+    },
+    handleResize() {
+      // 重新计算位置以适应窗口大小变化
+      this.initializePositions()
+      // 触发一次滚动处理以更新侧边栏状态
+      this.handleScroll()
     }
   }
 }
 </script>
 
 <template>
-  <!-- Title 占全屏 -->
   <div class="full-width-section">
     <Title/>
   </div>
 
   <div class="main-container">
     <div class="main-left">
-      <!-- 目录容器 -->
       <div class="sidebar-container">
-        <ul class="sidebar">
-          <li><a href="#abstract">Overview</a></li>
-          <li><a href="#motivation">Motivation</a></li>
-          <li><a href="#method">Method</a></li>
-          <li><a href="#experiments">Experiments</a></li>
-          <!-- <li><a href="#comment">Comment</a></li> -->
-        </ul>
+        <div class="sidebar">
+          <div class="sidebar-title">Content</div>
+          <ul class="sidebar-list">
+            <li><a href="#abstract">Overview</a></li>
+            <li><a href="#motivation">Motivation</a></li>
+            <li><a href="#method">Method</a></li>
+            <li><a href="#experiments">Experiments</a></li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="main-right">
-      <div id="abstract"><Abstract/></div>
+      <div style="padding-top: 20px;"> <div id="abstract"><Abstract/></div>
+      </div>
       <div id="motivation"><Motivation/></div>
       <div id="method"><Method/></div>
       <div id="experiments"><Experiments/></div>
-      <!-- <div id="comment"><Comment/></div> -->
-    </div>
+      </div>
   </div>
 
-  <!-- BibTeX 占全屏 -->
   <div class="full-width-section">
     <BibTeX/>
   </div>
-
 </template>
 
 <style scoped>
 .main-container {
   display: flex;
   width: 100%;
-  max-width: 1600px; /* 增加最大宽度 */
-  margin: 0 auto; /* 居中显示 */
-  padding: 0 15px; /* 减少左右边距 */
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 15px;
   box-sizing: border-box;
 }
 
 .main-left {
-  width: 200px; /* 增加侧边栏宽度 */
+  width: 200px;
   padding: 10px;
   box-sizing: border-box;
-  flex-shrink: 0; /* 防止收缩 */
+  flex-shrink: 0;
+  /* Add a height to ensure it doesn't collapse, though content should handle this */
+  align-self: flex-start; /* Align to the top */
 }
 
-/* 目录容器样式 */
 .sidebar-container {
   position: relative;
-  transition: all 0.2s ease;
-  width: 180px; /* 固定宽度 */
+  transition: top 0.2s ease; /* Smooth transition for position changes */
+  width: 180px;
   box-sizing: border-box;
 }
 
-/* 固定定位样式 - 滚动到顶部时应用 */
+/* Updated fixed positioning style */
 .sidebar-container.fixed {
   position: fixed;
-  z-index: 50; /* 降低层级，避免覆盖内容 */
-  width: 180px !important; /* 强制固定宽度，防止变化 */
+  z-index: 50;
+  /* The width is already set on the element, no !important needed */
 }
 
 .main-right {
   flex: 1;
-  padding: 0; /* 移除内边距，让各section自己控制 */
+  padding: 0;
   box-sizing: border-box;
+  min-width: 0; /* Prevents flexbox overflow issues */
 }
 
 .main-right > div {
   width: 100%;
-  margin-bottom: 0; /* 移除margin，让各section自己控制间距 */
-}
-
-.sidebar {
-  list-style: none;
-  padding: 16px;
-  margin: 0;
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e1e4e8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  width: 100%; /* 填满容器宽度 */
-  box-sizing: border-box;
-}
-
-.sidebar li {
-  margin-bottom: 6px;
-  list-style: none;
-}
-
-.sidebar li:last-child {
   margin-bottom: 0;
 }
 
-.sidebar a {
-  display: block;
-  padding: 8px 12px;
-  text-decoration: none;
-  color: #24292e;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  border-radius: 6px;
-  font-size: 14px;
-  line-height: 1.5;
-  white-space: nowrap; /* 防止文字换行 */
+.sidebar {
+  padding: 24px 12px;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.sidebar a:hover {
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #42b983;
+  text-align: left;
+  letter-spacing: 0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-transform: uppercase;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-list li {
+  margin-bottom: 4px;
+  list-style: none;
+}
+
+.sidebar-list li:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar-list a {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #5a6978;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: nowrap;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.sidebar-list a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #42b983;
+  border-radius: 0 3px 3px 0;
+  transition: height 0.25s ease;
+}
+
+.sidebar-list a:hover {
   color: #42b983;
   background: rgba(66, 185, 131, 0.08);
+  transform: translateX(3px);
+  padding-left: 16px;
+}
+
+.sidebar-list a:hover::before {
+  height: 70%;
+}
+
+.sidebar-list a:active {
   transform: translateX(2px);
 }
 
@@ -208,17 +253,120 @@ export default {
   padding: 0 20px;
 }
 
-/* 去掉 Abstract 上方空白 */
-#abstract {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-/* 确保所有section都有统一的对齐 */
+/* Note: Styles for #abstract, #motivation, etc., remain the same */
 #abstract,
 #motivation,
 #method,
 #experiments {
   max-width: 100%;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .main-container {
+    max-width: 100%;
+  }
+  
+  .main-left {
+    width: 180px;
+  }
+  
+  .sidebar-container {
+    width: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding: 0 10px;
+  }
+  
+  .main-left {
+    width: 100%;
+    padding: 12px 0;
+  }
+  
+  .sidebar-container {
+    position: static !important;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  
+  .sidebar-container.fixed {
+    position: static !important;
+  }
+  
+  .sidebar {
+    padding: 16px 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  
+  .sidebar-title {
+    font-size: 15px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+  
+  .sidebar-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .sidebar-list li {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+  
+  .sidebar-list a {
+    padding: 8px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  
+  .sidebar-list a::before {
+    display: none;
+  }
+  
+  .sidebar-list a:hover {
+    transform: scale(1.05);
+    padding-left: 12px;
+  }
+  
+  .main-right {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding: 0 5px;
+  }
+  
+  .sidebar {
+    padding: 12px 10px;
+  }
+  
+  .sidebar-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  
+  .sidebar-list {
+    gap: 8px;
+  }
+  
+  .sidebar-list a {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
 }
 </style>

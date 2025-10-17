@@ -6,11 +6,28 @@ These latent spaces exhibit **severe semantic entanglement**. In simple terms, t
 
 > As shown in the t-SNE visualizations below (from Figure 4a in the paper), the feature space from self-supervised models like **DINO** shows clear, well-defined clusters for different classes. In stark contrast, the latent spaces from various VAEs are highly entangled, visually demonstrating the root of the problem.
 
-(Here you would embed Figure 4a from the paper, showing the DINO vs. VAE t-SNE plots)
+
+<figure style={{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+}}>
+  <img src="./feature_separation.png" alt="viz" height="350"  />
+  <figcaption>Fig 2: t-SNE plots of different semantic components</figcaption>
+</figure>
 
 The consequences of this entanglement create a **dual challenge** that hinders progress:
 
 - **A Crisis of Efficiency**: The standard VAE+Diffusion pipeline is incredibly resource-intensive. Training a state-of-the-art model can require millions of GPU hours, and generating a single image often demands dozens of sequential sampling steps, making **real-time applications difficult**. This inefficiency is a direct result of forcing the diffusion model to learn on a suboptimal, entangled latent space.
+
+<figure style={{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+}}>
+  <img src="./meanvelocity.png" alt="viz" height="350"  />
+  <figcaption>Fig 2: Toy example</figcaption>
+</figure>
 
 - **A Lack of Versatility**: The VAE latent space is a "one-trick pony." It is custom-built for reconstruction and serves the diffusion process, but it is largely useless for other core vision tasks. The features learned by the VAE do not transfer well to tasks like **image classification, object detection, or semantic segmentation**. This forces the field into a siloed approach: we build one massive model for generation and entirely separate models for perception and understanding.
 

@@ -61,9 +61,10 @@ const more_paper = {
 
 /* 导航背景特效和阴影 */
 .el-affix--fixed {
-	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-	background-image: radial-gradient(#ffffffca 1px,#ffffff 1px);
-	background-size: 3px 3px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
+	background: rgba(255, 255, 255, 0.98);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
 }
 
 /* 水平导航高度 */
@@ -75,8 +76,10 @@ const more_paper = {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px; /* 与 el-header 高度一致 */
-  padding: 0 20px;
+  height: 64px;
+  padding: 0 32px;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .header-left {
@@ -85,21 +88,73 @@ const more_paper = {
 }
 
 .header-logo {
-  height: 40px;
+  height: 42px;
   width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
 }
 
 .header-right {
   display: flex;
   align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+  margin-left: 24px;
 }
 
 .header-title {
   font-size: 22px;
-  font-weight: 800;
-  color: #222;
-  font-family: "MyFont", Verdana, sans-serif;
-  letter-spacing: 1px;
+  font-weight: 700;
+  color: #1a202c;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+.header-title:hover {
+  color: #42b983;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .header-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 10px;
+  }
+  
+  .header-logo {
+    height: 30px;
+  }
+  
+  .header-title {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  
+  .header-right {
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo {
+    height: 25px;
+  }
+  
+  .header-title {
+    font-size: 12px;
+  }
 }
 
 .el-menu--horizontal {

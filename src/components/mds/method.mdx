@@ -4,7 +4,17 @@ Motivated by the inherent limitations of **VAE-based latent diffusion models**, 
 
 **Core Architecture: Fusing DINO and Residual Features**
 
+<figure style={{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+}}>
+  <img src="./architecture.png" alt="viz" height="280" style={{ border: '1px solid #ccc' }} />
+  <figcaption>Fig 2: SVG Autoencoder</figcaption>
+</figure>
+
 The SVG autoencoder is meticulously designed to achieve two critical goals simultaneously: **preserve the rich semantic structure** of powerful self-supervised features and **ensure faithful image reconstruction**. It consists of two primary components:
+
 
 1. **Frozen DINOv3 Encoder (Semantic Backbone)**
    - We leverage the exceptional capabilities of a pre-trained **DINOv3 encoder**.
@@ -17,6 +27,16 @@ The SVG autoencoder is meticulously designed to achieve two critical goals simul
    - Introduce a **lightweight Residual Encoder**, built on a **Vision Transformer**, to capture these missing details (color, texture, high-frequency patterns) **without interfering with DINOv3 semantic integrity**.
 
 The outputs of the Residual Encoder are concatenated along the channel dimension with the DINOv3 features. This fusion process creates the comprehensive **SVG feature space**, enriched with both **semantic discriminability** and **essential perceptual details**, enabling **high-quality reconstruction**.
+
+<figure style={{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+}}>
+  <img src="./rec.png" alt="viz" height="350"  />
+  <figcaption>Fig 2: SVG reconstruction</figcaption>
+</figure>
+
 
 **Diffusion Modeling on a Unified Feature Space**
 

@@ -1,4 +1,4 @@
-**We introduce SVG (Self-supervised Visual Generation), a new paradigm for latent diffusion models that completely eliminates the traditional Variational Autoencoder (VAE).**
+We introduce **SVG** (**S**elf-supervised representation for **V**isual **G**eneration), a new paradigm for **latent diffusion models that completely eliminates the traditional Variational Autoencoder (VAE)**.
 
 Our **core idea** is simple yet powerful:
 
@@ -9,3 +9,17 @@ This *"leverage, don't learn"* strategy leads to **transformative advantages**:
 1. **Extreme Efficiency**: Compared to mainstream VAE-based models, SVG achieves up to **62x speedup in training** and a **35x speedup in inference**.
 2. **Superior Quality**: Generates **high-fidelity and high-quality images** in remarkably few sampling steps (e.g., 25 steps).
 3. **True Versatility**: Establishes a **unified visual feature space**. The same encoder used for image generation can, without any modification, achieve **state-of-the-art performance** on downstream tasks like image classification and semantic segmentation, realizing a *"one model, multiple purposes"* vision.
+
+<figure style={{ textAlign: 'center' }}>
+  <img src="./teaser.png" alt="teaser" height="410" style={{ border: '1px solid #ccc' }} />
+  <figcaption>Fig 1: Core Contribution</figcaption>
+</figure>
+
+<figure style={{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+}}>
+  <img src="./viz.png" alt="viz" height="280" style={{ border: '1px solid #ccc' }} />
+  <figcaption>Fig 2: Selected 256x256 samples from SVG-XL</figcaption>
+</figure>

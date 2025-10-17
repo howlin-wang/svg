@@ -3,9 +3,6 @@
 import { ElIcon } from 'element-plus'
 import { Document, Files, MagicStick, Picture, DataAnalysis, Film } from '@element-plus/icons-vue'
 
-// logo地址，没有则置为""即可
-const logo = './svg.png'
-
 // 标题
 const title = 'Latent Diffusion Model without Variational Autoencoder'
 
@@ -38,7 +35,7 @@ const authors = [
 const addresses = [
   {
     address_flag: "1",
-    name: "Automation Department, Tsinghua University",
+    name: "Department of Automation, Tsinghua University",
     icon: "",
     homepage: "https://www.au.tsinghua.edu.cn/en/"
   },
@@ -52,8 +49,8 @@ const addresses = [
 
 // 共一和通讯提示
 const con_and_corresponding_author = [
-  "#: Equal Contribution. Listed in alphabetical order.",
-  "*: Project Leader."
+  "#: Equal Contribution. Listed in alphabetical order. *: Project Leader.",
+  
 ]
 
 // 最新消息
@@ -85,249 +82,373 @@ const buttons = [
 </script>
 
 <template>
-  <div>
+  <div class="title-section">
+    <div class="title-content">
+      <!-- 文章标题 -->
+      <div class="title-header">
+        <h1 class="paper-title">
+          <span v-if="title" :style="{color:title_color}">{{ title }}</span>
+          <span v-if="title_supp" :style="{color:title_supp_color}">{{ title_supp }}</span>
+        </h1>
+      </div>
 
-    <!-- 最新消息提示 -->
-    <!-- <el-row justify="center">
-      <el-col :span="24">
-        <el-alert title="🔥 This template is still under development." type="success" />
-      </el-col>
-    </el-row> -->
-
-    <!-- 文章标题 -->
-    <el-row justify="center" align="middle" class="title-row">
-      <el-col :span="20" class="title-container">
-        <div class="title-with-logo">
-          <el-image v-if="logo" :src="logo" class="logo-inline" fit="contain" />
-          <h1 class="paper-title">
-            <span v-if="title" :style="{color:title_color}">{{ title }}</span>
-            <span v-if="title_supp" :style="{color:title_supp_color}">{{ title_supp }}</span>
-          </h1>
-        </div>
-      </el-col>
-    </el-row>
-
-    <!-- 作者名单 -->
-    <el-row justify="center">
-      <a :href=author.homepage class="author-link" v-for="author in authors">
-        <el-button class="title-button" type="primary" text>
-          <span class="author">
-            {{ author.name }}<sup v-if="author.address_flag" class="name_sup">{{ author.address_flag }}</sup>
+      <!-- 作者名单 -->
+      <div class="authors-container">
+        <a 
+          v-for="author in authors" 
+          :key="author.name"
+          :href="author.homepage" 
+          class="author-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="author-name">
+            {{ author.name }}<sup v-if="author.address_flag" class="name-sup">{{ author.address_flag }}</sup>
           </span>
-        </el-button>
-      </a>
-    </el-row>
+        </a>
+      </div>
 
-    <!-- 地址名单 -->
-    <el-row justify="center">
-      <a :href=address.homepage class="address-link" v-for="address in addresses">
-        <el-button class="title-button" type="primary" text>
-          <span class="address">
-            <sup v-if="address.address_flag" class="address_sup">{{ address.address_flag }}</sup>{{ address.name }}
+      <!-- 地址名单 -->
+      <div class="affiliations-container">
+        <a 
+          v-for="address in addresses" 
+          :key="address.address_flag"
+          :href="address.homepage" 
+          class="affiliation-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="affiliation-name">
+            <sup v-if="address.address_flag" class="address-sup">{{ address.address_flag }}</sup>{{ address.name }}
           </span>
-        </el-button>
-      </a>
-    </el-row>
+        </a>
+      </div>
 
-    <!-- 共一和通讯提示内容 -->
-    <el-row justify="center" class="con-cor" v-for="line in con_and_corresponding_author">
-        {{ line }}
-    </el-row>
+      <!-- 共一和通讯提示内容 -->
+      <div class="contribution-note">
+        <p v-for="(line, index) in con_and_corresponding_author" :key="index">
+          {{ line }}
+        </p>
+      </div>
 
-
-    <!-- 强调内容 -->
-    <!-- <el-row justify="center" class="emphasis" v-for="emphasis in emphases">
-        {{ emphasis }}
-    </el-row> -->
-
-    <!-- 提供引导按钮 -->
-    <el-row justify="center" style="margin-bottom: 20px;">
-      <el-col :span="20">
-        <el-row justify="center">
-          <a :href=button.link v-for="button in buttons">
-            <el-button class="guidance-button" size="default" :color="btn_color" :disabled="button.disabled" round>
-              <el-icon :size="18">
-                <component :is="button.component" />
-              </el-icon>
-              <span class="btn-text">{{ button.name }}</span>
-            </el-button>
-          </a>
-        </el-row>
-      </el-col>
-    </el-row>
-
+      <!-- 提供引导按钮 -->
+      <div class="action-buttons">
+        <a 
+          v-for="button in buttons" 
+          :key="button.name"
+          :href="button.link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button 
+            class="action-button" 
+            :class="{ disabled: button.disabled }"
+            :disabled="button.disabled"
+          >
+            <el-icon :size="20" class="button-icon">
+              <component :is="button.component" />
+            </el-icon>
+            <span class="button-text">{{ button.name }}</span>
+          </button>
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 
-/* 文章标题字体、字间距、居中排布、字号 */
+/* 整体容器 */
+.title-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  padding: 60px 20px;
+  margin: 0 0 40px 0;
+}
+
+.title-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 48px 40px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+
+/* 标题区域 */
+.title-header {
+  margin-bottom: 32px;
+}
+
 .paper-title {
-  font-family: "MyFont", Verdana, sans-serif;
-  letter-spacing: 2px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   font-size: 42px;
   margin: 0;
   text-align: center;
-  line-height: 64px; /* 与 logo 高度对齐 */
+  line-height: 1.3;
+  color: #1a202c;
+  padding: 0 20px;
 }
 
-/* 姓名和地址按钮 - 减小外边距让作者名更紧凑 */
-.title-button {
-  margin: 2px 0px; /* 进一步减小上下和左右间距 */
-  padding: 4px 6px; /* 减小按钮内边距 */
-}
-
-/* 姓名和地址按钮光标悬浮 - 调整悬浮时的间距 */
-.title-button:hover {
-  margin: 2px 0px; /* 保持和正常状态一致，避免悬浮时跳动 */
-}
-
-/* 引导材料按钮 */
-.guidance-button {
-  margin: 8px 5px;
-  box-shadow: #d8d8d8 1px 1px 1px 1px;
-}
-
-/* 姓名属性 - 减小字体大小增强紧凑感 */
-.author {
-  font-size: 16px; /* 从18px减小到16px */
-  margin-left: 1px; /* 减小左侧间距 */
-  line-height: 1.2; /* 添加紧凑行间距 */
-}
-
-/* 姓名上标属性 - 减小上标与姓名的间距 */
-.name_sup {
-  color: #606266; 
-  margin-left: 1px; /* 保持1px */
-  font-size: 12px; /* 减小上标字体 */
-}
-
-/* 地址属性 */
-.address {
-  font-size: 16px; /* 从18px减小到16px */
-  line-height: 1.2; /* 添加紧凑行间距 */
-}
-
-/* 地址上标属性 */
-.address_sup {
-  color: #606266; 
-  margin-right: 1px;
-  font-size: 12px; /* 减小上标字体 */
-}
-
-/* 头像属性 */
-.el-avatar {
-  margin-right: 6px;
-  box-shadow: #b7b7b7 0px 0px 3px 1px;
-}
-
-/* 共一和通讯文字属性 */
-.con-cor {
-  font-family: Arial;
-  font-size: 14px; /* 从16px减小到14px */
-  margin: 12px 0px; /* 从18px减小到12px */
-  text-align: center;
-  line-height: 1.3; /* 添加紧凑行间距 */
-}
-
-/* 强调信息属性 */
-.emphasis {
-  color: chocolate;
-  font-weight: bold;
-  margin: 8px;
-  font-size: 22px;
-  text-align: center;
-}
-
-/* 引导材料按钮文字属性 */
-.btn-text {
-  font-size: 18px;
-  color: #ffffff;
-}
-
-.el-alert {
-  margin: 10px 0 0;
-}
-
-.el-alert:first-child {
-  margin: 0;
-}
-
-
-/* 使 logo 与标题水平排列并垂直居中 */
-/* 使 logo 与标题水平排列并垂直居中，并优化间距 */
-.title-with-logo {
+/* 作者容器 */
+.authors-container {
   display: flex;
-  align-items: center;       /* 垂直居中 */
-  justify-content: center;   /* 水平居中 */
-  gap: 12px;                 /* 调整间距 */
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 24px;
+  padding: 0 20px;
 }
 
-.logo-inline {
-  max-width: 180px;      /* 放大图片以与标题高度匹配 */
-  height: auto;          /* 按比例自适应高度 */
-  object-fit: contain;   /* 保证完整显示 */
-  display: block;
-  align-self: center;    /* 确保垂直居中对齐标题 */
-}
-
-/* 手机端链接样式处理 */
-a:-webkit-any-link {
+.author-link {
   text-decoration: none;
+  transition: all 0.25s ease;
+  display: inline-block;
 }
 
-/* 取消鼠标焦点悬浮在链接上的颜色装饰 */
-a:hover {
-  color: inherit;
-  border-bottom: none;
+.author-name {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4a5568;
+  transition: color 0.25s ease;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: transparent;
 }
 
-/* 链接装饰，取消下划线和链接颜色 */
-a {
-	text-decoration: None;
-	color: inherit;
+.author-link:hover .author-name {
+  color: #42b983;
+  background: rgba(66, 185, 131, 0.08);
 }
 
-/* 作者超链接颜色 */
-a.author-link {
-  color: #303136 !important; /* 使用蓝色并提高优先级 */
-  text-decoration: none; 
-  transition: color 0.2s ease; 
+.name-sup {
+  color: #718096;
+  margin-left: 2px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-a.author-link:hover {
-  color: #1d4ed8 !important; /* 悬浮时深蓝色，提高优先级 */
-  text-decoration: none; 
+/* 机构容器 */
+.affiliations-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 24px;
+  margin-bottom: 20px;
+  padding: 0 20px;
 }
 
-/* 作者按钮内的文字颜色 */
-a.author-link .author {
-  color: #242425 !important; /* 直接控制作者文字颜色 */
+.affiliation-link {
+  text-decoration: none;
+  transition: all 0.25s ease;
+  display: inline-block;
 }
 
-a.author-link:hover .author {
-  color: #1d4ed8 !important; /* 悬浮时作者文字颜色 */
+.affiliation-name {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #718096;
+  transition: color 0.25s ease;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
-/* 机构超链接颜色 */
-a.address-link {
-  color: #303136 !important; /* 与作者链接保持一致的颜色 */
-  text-decoration: none; 
-  transition: color 0.2s ease; 
+.affiliation-link:hover .affiliation-name {
+  color: #42b983;
+  background: rgba(66, 185, 131, 0.06);
 }
 
-a.address-link:hover {
-  color: #1d4ed8 !important; /* 悬浮时深蓝色，提高优先级 */
-  text-decoration: none; 
+.address-sup {
+  color: #a0aec0;
+  margin-right: 3px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
-/* 机构按钮内的文字颜色 */
-a.address-link .address {
-  color: #242425 !important; /* 直接控制机构文字颜色 */
+/* 贡献说明 */
+.contribution-note {
+  text-align: center;
+  margin: 24px 0 32px 0;
+  padding: 0 20px;
 }
 
-a.address-link:hover .address {
-  color: #1d4ed8 !important; /* 悬浮时机构文字颜色 */
+.contribution-note p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: #718096;
+  margin: 6px 0;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* 操作按钮容器 */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  padding: 0 20px;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #42b983 0%, #359268 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(66, 185, 131, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.action-button:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(66, 185, 131, 0.4);
+}
+
+.action-button:hover:not(.disabled)::before {
+  left: 100%;
+}
+
+.action-button:active:not(.disabled) {
+  transform: translateY(0);
+}
+
+.action-button.disabled {
+  background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+  cursor: not-allowed;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0.6;
+}
+
+.button-icon {
+  display: flex;
+  align-items: center;
+}
+
+.button-text {
+  font-size: 16px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .paper-title {
+    font-size: 36px;
+  }
+  
+  .title-content {
+    padding: 40px 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .title-section {
+    padding: 40px 15px;
+    margin-bottom: 30px;
+  }
+  
+  .title-content {
+    padding: 32px 24px;
+    border-radius: 20px;
+  }
+  
+  .paper-title {
+    font-size: 28px;
+    padding: 0 10px;
+  }
+  
+  .authors-container,
+  .affiliations-container {
+    gap: 6px 12px;
+  }
+  
+  .author-name {
+    font-size: 14px;
+    padding: 4px 10px;
+  }
+  
+  .affiliation-name {
+    font-size: 13px;
+    padding: 3px 8px;
+  }
+  
+  .contribution-note p {
+    font-size: 12px;
+  }
+  
+  .action-button {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-section {
+    padding: 30px 10px;
+  }
+  
+  .title-content {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+  
+  .paper-title {
+    font-size: 22px;
+    line-height: 1.4;
+  }
+  
+  .authors-container {
+    gap: 4px 8px;
+  }
+  
+  .author-name {
+    font-size: 13px;
+    padding: 3px 8px;
+  }
+  
+  .affiliation-name {
+    font-size: 12px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-button {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
 }
 
 </style>

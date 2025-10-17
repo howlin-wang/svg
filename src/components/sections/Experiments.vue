@@ -4,9 +4,9 @@ import experiments from '../mds/exp.mdx';
 
 <template>
   <div class="section-container">
-    <el-divider class="section-divider">
-      <span class="section-title">Experiments</span>
-    </el-divider>
+    <div class="section-header">
+      <h2 class="section-title">Experiments</h2>
+    </div>
 
     <el-row justify="center">
       <el-col :xs="24" :sm="24" :md="24" :lg="22" :xl="20" class="content-col">
@@ -24,18 +24,22 @@ import experiments from '../mds/exp.mdx';
   padding: 0 10px;
 }
 
-.section-divider {
-  margin: 32px 0 24px;
-  border-color: #d1d5db;
+.section-header {
+  margin-bottom: 32px;
 }
 
 .section-title {
   font-size: 28px;
   font-weight: 700;
-  color: #111827;
-  padding: 0 20px;
-  background: #fff;
-  letter-spacing: -0.5px;
+  color: #42b983;
+  margin: 0;
+  padding: 0 0 16px 0;
+  background: transparent;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+  position: relative;
+  display: inline-block;
+  border-bottom: 3px solid #42b983;
 }
 
 .content-col {
@@ -44,11 +48,17 @@ import experiments from '../mds/exp.mdx';
 
 .content-wrapper {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
   line-height: 1.75;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.content-wrapper:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
 }
 
 /* 优化内容样式 */
@@ -137,5 +147,54 @@ import experiments from '../mds/exp.mdx';
   font-size: 14px;
   color: #e83e8c;
   font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+}
+
+/* 响应式图片样式 */
+.content-wrapper :deep(img) {
+  max-width: 100%;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}
+
+.content-wrapper :deep(figure) {
+  margin: 24px 0;
+  text-align: center;
+}
+
+.content-wrapper :deep(figcaption) {
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* 响应式标题样式 */
+@media (max-width: 1024px) {
+  .section-title {
+    font-size: 24px;
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 20px;
+    padding: 0 20px;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 18px;
+    padding: 0 15px;
+    white-space: normal;
+    line-height: 1.3;
+  }
+  
+  .content-wrapper {
+    padding: 24px 20px;
+  }
 }
 </style>
