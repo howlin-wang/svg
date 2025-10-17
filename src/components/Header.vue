@@ -38,7 +38,7 @@ const more_paper = {
     <el-affix :offset="0" :style="{width: '100%'}">
       <div class="header-container">
         <div class="header-left">
-          <img src="svg.png" alt="Logo" class="header-logo"/>
+          <img src="/svg.png" alt="Logo" class="header-logo"/>
         </div>
         <div class="header-right">
           <div class="header-title">Latent Diffusion Model without Variational Autoencoder</div>
