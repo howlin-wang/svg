@@ -5,6 +5,7 @@ import Motivation from './sections/Motivation.vue'
 import BibTeX from './sections/BibTeX.vue'
 import Method from './sections/Method.vue'
 import Experiments from './sections/Experiments.vue'
+import Discussion from './sections/Discussion.vue'
 // import Comment from './sections/Comment.vue'
 
 export default {
@@ -14,6 +15,7 @@ export default {
     Motivation,
     Method,
     Experiments,
+    Discussion,
     BibTeX,
     // Comment
   },
@@ -101,6 +103,7 @@ export default {
             <li><a href="#motivation">Motivation</a></li>
             <li><a href="#method">Method</a></li>
             <li><a href="#experiments">Experiments</a></li>
+            <li><a href="#discussion">Discussion</a></li>
           </ul>
         </div>
       </div>
@@ -111,6 +114,7 @@ export default {
       <div id="motivation"><Motivation/></div>
       <div id="method"><Method/></div>
       <div id="experiments"><Experiments/></div>
+      <div id="discussion"><Discussion/></div>
       </div>
   </div>
 
@@ -257,7 +261,8 @@ export default {
 #abstract,
 #motivation,
 #method,
-#experiments {
+#experiments,
+#discussion {
   max-width: 100%;
 }
 
