@@ -1,11 +1,8 @@
-Modern high-fidelity image generation, exemplified by models like **Stable Diffusion**, is built on the **Latent Diffusion Model (LDM)** paradigm. This approach first uses a **Variational Autoencoder (VAE)** to compress a high-resolution image into a small, low-dimensional latent space. A diffusion model is then trained on this compressed representation, which is computationally cheaper than training on raw pixels.
+Modern high-fidelity image generation, exemplified by models like **Stable Diffusion**, is built on the **LDM** paradigm. This approach first uses a **VAE** to compress a high-resolution image into a small, low-dimensional latent space. A diffusion model is then trained on this compressed representation, which is computationally cheaper than training on raw pixels.
 
 However, this VAE-based approach suffers from a fundamental, yet often overlooked, **bottleneck**: the quality of the VAE's latent space itself.
 
-These latent spaces exhibit **severe semantic entanglement**. In simple terms, the representations of conceptually distinct objects—like a *dog*, *cat*, and *car*—are not clearly separated. Instead, they are heavily mixed and overlapped, creating a **chaotic, unstructured map** for the diffusion model to navigate. During training, the model must expend enormous effort to learn how to denoise a point in this confusing space, as the "correct" direction is ambiguous. This directly leads to **inefficient training** and requires many slow, careful sampling steps during inference to achieve good results.
-
-> As shown in the t-SNE visualizations below (from Figure 4a in the paper), the feature space from self-supervised models like **DINO** shows clear, well-defined clusters for different classes. In stark contrast, the latent spaces from various VAEs are highly entangled, visually demonstrating the root of the problem.
-
+>These latent spaces exhibit **severe semantic entanglement** (Demonstrated in Fig 3). In simple terms, the representations of conceptually distinct objects—like a *dog*, *cat*, and *car*—are not clearly separated. Instead, they are heavily mixed and overlapped, creating a **chaotic, unstructured map** for the diffusion model to navigate. 
 
 <figure style={{
   display: 'flex',
@@ -13,12 +10,10 @@ These latent spaces exhibit **severe semantic entanglement**. In simple terms, t
   alignItems: 'center'
 }}>
   <img src="./feature_separation.png" alt="viz" height="350"  />
-  <figcaption>Fig 2: t-SNE plots of different semantic components</figcaption>
+  <figcaption>Fig 3: t-SNE plots of different semantic components</figcaption>
 </figure>
 
-The consequences of this entanglement create a **dual challenge** that hinders progress:
-
-- **A Crisis of Efficiency**: The standard VAE+Diffusion pipeline is incredibly resource-intensive. Training a state-of-the-art model can require millions of GPU hours, and generating a single image often demands dozens of sequential sampling steps, making **real-time applications difficult**. This inefficiency is a direct result of forcing the diffusion model to learn on a suboptimal, entangled latent space.
+>During training, the model must expend enormous effort to learn how to denoise a point in this confusing space, as the "correct" direction is ambiguous (Illustrated by the toy example in Fig 4). This directly leads to **inefficient training** and requires **many slow, careful sampling steps** during inference to achieve good results.
 
 <figure style={{
   display: 'flex',
@@ -26,9 +21,18 @@ The consequences of this entanglement create a **dual challenge** that hinders p
   alignItems: 'center'
 }}>
   <img src="./meanvelocity.png" alt="viz" height="350"  />
-  <figcaption>Fig 2: Toy example</figcaption>
+  <figcaption>Fig 4: Toy example</figcaption>
 </figure>
 
-- **A Lack of Versatility**: The VAE latent space is a "one-trick pony." It is custom-built for reconstruction and serves the diffusion process, but it is largely useless for other core vision tasks. The features learned by the VAE do not transfer well to tasks like **image classification, object detection, or semantic segmentation**. This forces the field into a siloed approach: we build one massive model for generation and entirely separate models for perception and understanding.
+
+
+
+
+The consequences of this entanglement create a **dual challenge** that hinders progress:
+
+- **A Crisis of Efficiency**: The standard VAE+Diffusion pipeline is quite resource-intensive both in training and sampling. This inefficiency is a direct result of forcing the diffusion model to learn on a suboptimal, semantically entangled latent space.
+
+
+- **A Lack of Versatility**: The VAE latent space is a "one-trick pony." It is custom-built for reconstruction and serves the diffusion process, but it is largely useless for other core vision tasks. This forces the field into a siloed approach: we build one massive model for generation and entirely separate models for perception and understanding.
 
 > **Critical Question**: What if we could design a single, unified feature space that is inherently structured for both **efficient, high-quality generation** and **robust performance** across a wide array of vision tasks? This is the core motivation behind our work.

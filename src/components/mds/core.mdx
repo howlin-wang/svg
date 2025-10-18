@@ -1,14 +1,18 @@
-We introduce **SVG** (**S**elf-supervised representation for **V**isual **G**eneration), a new paradigm for **latent diffusion models that completely eliminates the traditional Variational Autoencoder (VAE)**.
+We introduce **SVG** (**S**elf-supervised representation for **V**isual **G**eneration), a new paradigm for latent diffusion models (LDMs) that **completely eliminates the traditional Variational Autoencoder (VAE)**.
 
-Our **core idea** is simple yet powerful:
+We raise and explore the following **key questions**:
 
-> Instead of learning a latent space for generation from scratch, we leverage one that is already exceptionally good. Specifically, **SVG utilizes the highly structured and semantically disentangled feature space from the powerful self-supervised vision model, DINOv3, as its foundation**. To ensure the fidelity of image reconstruction, we introduce a **lightweight Residual Encoder** designed to capture the fine-grained, high-frequency details that DINO features might overlook.
+> Given that generation and perception/understanding are inherently intertwined, **why not unify them within a shared feature space?**
 
-This *"leverage, don't learn"* strategy leads to **transformative advantages**:
+> Can existing advanced visual foundation model (VFM) features—such as those from DINO—serve as an **effective representation for diffusion model training, with minimal modification?**
 
-1. **Extreme Efficiency**: Compared to mainstream VAE-based models, SVG achieves up to **62x speedup in training** and a **35x speedup in inference**.
-2. **Superior Quality**: Generates **high-fidelity and high-quality images** in remarkably few sampling steps (e.g., 25 steps).
-3. **True Versatility**: Establishes a **unified visual feature space**. The same encoder used for image generation can, without any modification, achieve **state-of-the-art performance** on downstream tasks like image classification and semantic segmentation, realizing a *"one model, multiple purposes"* vision.
+Our findings provide a clear answer: **such a unified feature space is entirely feasible.** The DINO feature space requires only minor adjustments to simultaneously **support high-quality generation and reconstruction.**
+
+Our proposed SVG model leads to **transformative advantages**:
+
+1. **Extreme Efficiency**: Compared to vanilla VAE-based models, SVG achieves up to **62x speedup in training** and a **35x speedup in inference**.
+2. **Superior Quality**: Generates **high-fidelity and high-quality images** in few sampling steps.
+3. **True Versatility**: Establishes a **unified visual feature space**. The same encoder used for **image generation** can, without any modification, achieve strong performance on downstream tasks like **image classification, semantic segmentation, and depth estimation**, realizing a *"one space, multiple purposes"* vision.
 
 <figure style={{ textAlign: 'center' }}>
   <img src="./teaser.png" alt="teaser" height="410" style={{ border: '1px solid #ccc' }} />

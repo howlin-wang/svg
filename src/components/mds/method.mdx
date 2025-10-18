@@ -1,8 +1,8 @@
-Motivated by the inherent limitations of **VAE-based latent diffusion models**, we propose **SVG (Self-supervised Visual Generation)**, a novel generative paradigm that constructs a **task-general feature space**. This space combines the **strong semantic discriminability** of modern vision foundation models with the **fine-grained perceptual details** necessary for high-quality image generation. The overall architecture of SVG is illustrated in Figure 3.
+Motivated by the inherent limitations of **VAE-based latent diffusion models**, we propose **SVG**, a novel generative paradigm that constructs a **task-general feature space**. 
 
-> (Here you would embed Figure 3 from the paper, showing the SVG Autoencoder architecture)
+This space combines the **strong semantic discriminability** of modern vision foundation models with the **fine-grained perceptual details** necessary for high-fidelity image reconstruction. The overall architecture of SVG is illustrated in Fig 5.
 
-**Core Architecture: Fusing DINO and Residual Features**
+
 
 <figure style={{
   display: 'flex',
@@ -10,7 +10,7 @@ Motivated by the inherent limitations of **VAE-based latent diffusion models**, 
   alignItems: 'center'
 }}>
   <img src="./architecture.png" alt="viz" height="280" style={{ border: '1px solid #ccc' }} />
-  <figcaption>Fig 2: SVG Autoencoder</figcaption>
+  <figcaption>Fig 5: SVG Autoencoder</figcaption>
 </figure>
 
 The SVG autoencoder is meticulously designed to achieve two critical goals simultaneously: **preserve the rich semantic structure** of powerful self-supervised features and **ensure faithful image reconstruction**. It consists of two primary components:
@@ -18,15 +18,14 @@ The SVG autoencoder is meticulously designed to achieve two critical goals simul
 
 1. **Frozen DINOv3 Encoder (Semantic Backbone)**
    - We leverage the exceptional capabilities of a pre-trained **DINOv3 encoder**.
-   - DINOv3 is renowned for learning **highly discriminative features** that capture robust semantic information and strong inter-class separation.
+   - DINOv3 is renowned for learning **highly discriminative features** that capture robust semantic information.
    - By freezing this encoder, we directly incorporate its **semantically structured latent space**, which is crucial for efficient diffusion training.
-   - Acts as the **semantic backbone**, providing a clean and organized foundation for generation.
 
 2. **Lightweight Residual Encoder (Detail Refinement)**
    - DINOv3 may miss some **fine-grained perceptual details**.
-   - Introduce a **lightweight Residual Encoder**, built on a **Vision Transformer**, to capture these missing details (color, texture, high-frequency patterns) **without interfering with DINOv3 semantic integrity**.
+   - Introduce a **lightweight Residual Encoder**, built on a Vision Transformer, to capture these **missing details (color, texture, high-frequency patterns)**.
+   - The Residual Encoder's outputs are aligned in distribution with the DINO features, ensuring that the combined feature space **preserves the original semantic structure while incorporating fine-grained details.**
 
-The outputs of the Residual Encoder are concatenated along the channel dimension with the DINOv3 features. This fusion process creates the comprehensive **SVG feature space**, enriched with both **semantic discriminability** and **essential perceptual details**, enabling **high-quality reconstruction**.
 
 <figure style={{
   display: 'flex',
@@ -34,14 +33,14 @@ The outputs of the Residual Encoder are concatenated along the channel dimension
   alignItems: 'center'
 }}>
   <img src="./rec.png" alt="viz" height="350"  />
-  <figcaption>Fig 2: SVG reconstruction</figcaption>
+  <figcaption>Fig 6: SVG reconstruction</figcaption>
 </figure>
 
 
 **Diffusion Modeling on a Unified Feature Space**
 
-Unlike prior approaches that train diffusion models on low-dimensional VAE latent spaces, **SVG Diffusion** directly treats this **high-dimensional, semantically structured SVG feature space** as its target distribution. The diffusion model is trained using a **flow matching objective** (as defined in Equation 5 of the paper).
+Unlike prior approaches that train diffusion models on low-dimensional VAE latent spaces, **SVG Diffusion** directly treats this **high-dimensional**, semantically structured SVG feature space as its target distribution. The diffusion model is trained using a **flow matching objective**.
 
-A key challenge with high-dimensional latent spaces in diffusion models is often **unstable convergence**. However, the inherently **well-dispersed semantic structure** of our SVG features—where different semantic classes are clearly separated and intra-class representations are compact (as shown in Figure 4)—makes training remarkably **stable and efficient**. This structured latent space simplifies optimization, allowing the diffusion model to **converge faster** and achieve **superior generative quality** with fewer sampling steps.
+A key challenge with high-dimensional latent spaces in diffusion models is often **unstable convergence**. However, the inherently well-dispersed semantic structure of our SVG features makes training remarkably **stable and efficient**, even **without modifying the diffusion backbone**. This structured latent space simplifies optimization, allowing the diffusion model to converge faster and achieve superior generative quality with fewer sampling steps.
 
-> By integrating DINOv3 and a residual branch, **SVG creates a unified feature representation** that not only excels in generative tasks but also inherently supports a **wide range of core vision tasks**, providing a versatile foundation for visual understanding.
+> By integrating DINOv3 and a residual branch, **SVG creates a unified feature representation** that not only excels in generative diffusion modeling but also inherently supports a **wide range of core vision tasks**, providing a versatile foundation for visual understanding.

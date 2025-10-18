@@ -67,14 +67,15 @@ const emphases = [
 // 提供引导资料链接
 const buttons = [
   {
-    disabled: true,
+    disabled: false,
     name: "Paper",
+    link: "https://github.com/shiml20/SVG",
     component: Document,
   },
   {
     disabled: false,
     name: "Code",
-    link: "https://github.com/JunyaoHu/academic-project-page-template-vue",
+    link: "https://github.com/shiml20/SVG",
     component: Files,
   },
 ]
